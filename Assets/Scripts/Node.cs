@@ -15,7 +15,7 @@ public class Node : MonoBehaviour
 
     void Start()
     {
-        realRotation = transform.rotation.eulerAngles.z;
+        //realRotation = transform.rotation.eulerAngles.z;
     }
 
     // Update is called once per frame
