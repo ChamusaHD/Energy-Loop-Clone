@@ -7,15 +7,19 @@ using UnityEngine.UIElements;
 
 public class Node : MonoBehaviour
 {
-    [SerializeField] private int[] values;
+    public int[] values;
 
     [SerializeField] private float speed;
 
     private float realRotation;
 
+    private GameManager gameManager;
+
     void Start()
     {
         //realRotation = transform.rotation.eulerAngles.z;
+
+        gameManager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -30,11 +34,18 @@ public class Node : MonoBehaviour
     private void OnMouseDown()
     {
         RotateNodes();
+
+        gameManager.puzzle.currentConections = gameManager.Sweep();
+
+        if (gameManager.puzzle.currentConections == gameManager.puzzle.conectionsToWin )
+        {
+            gameManager.CheckPuzzleCompletion();
+        }
     }
 
-    private void RotateNodes()
+    public void RotateNodes()
     {
-        realRotation -= 90;
+        realRotation += 90;
         //transform.rotation = Quaternion.Euler(0, 0, realRotation);
 
         if (realRotation == 360)
@@ -54,4 +65,9 @@ public class Node : MonoBehaviour
 
         values[3] = aux;
     }
+
+    /*public int GetValues()
+    {
+        return values[1];
+    }*/
 }
