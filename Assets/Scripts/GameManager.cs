@@ -86,8 +86,8 @@ public class GameManager : MonoBehaviour
         int value = 0;
 
         //for each collumn check its line 
-        for (int h = 0;h < puzzle.height;h++)
-            for (int w = 0;w < puzzle.width; w++)
+        for (int h = 0; h < puzzle.height;h++)
+            for (int w = 0; w < puzzle.width; w++)
             {
                 //Compare Top and Bottom conections
                 if (h != puzzle.height - 1)
@@ -159,5 +159,12 @@ public class GameManager : MonoBehaviour
     public void CheckPuzzleCompletion()
     {
         canvas.SetActive(true);
+        foreach (Node node in puzzle.nodes)
+            node.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+        //TODO: Level progress and score saving
+        //      Particle effects, camera shake,
+        //      On level completion, lines should illuminate or provide a visual feedback.
     }
+
 }

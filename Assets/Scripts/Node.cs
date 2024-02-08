@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class Node : MonoBehaviour
 {
@@ -15,11 +16,14 @@ public class Node : MonoBehaviour
 
     private GameManager gameManager;
 
+    private SpriteRenderer spriteRenderer;
+
     void Start()
     {
         //realRotation = transform.rotation.eulerAngles.z;
 
         gameManager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -33,6 +37,10 @@ public class Node : MonoBehaviour
 
     private void OnMouseDown()
     {
+
+        //Play.SFX
+        Handheld.Vibrate();
+
         RotateNodes();
 
         gameManager.puzzle.currentConections = gameManager.Sweep();
@@ -40,7 +48,12 @@ public class Node : MonoBehaviour
         if (gameManager.puzzle.currentConections == gameManager.puzzle.conectionsToWin )
         {
             gameManager.CheckPuzzleCompletion();
-        }
+            //spriteRenderer.color= Color.white;
+            //SceneManager.LoadScene("LevelSelection");
+            LevelManager.Instance.UnlockNewLevel();
+            //Invoke();
+
+        } 
     }
 
     public void RotateNodes()
