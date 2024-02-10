@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,7 +18,6 @@ public class LevelManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
         else 
         {
@@ -61,6 +56,7 @@ public class LevelManager : MonoBehaviour
     public void ResetPlayerPrefsKeys()
     {
         PlayerPrefs.SetInt("UnlockedLevels", 1);
+        PlayerPrefs.SetInt("Score", 0);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void OpenLevel(int levelID)

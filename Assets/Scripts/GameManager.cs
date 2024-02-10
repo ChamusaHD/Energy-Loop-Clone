@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -40,6 +39,7 @@ public class GameManager : MonoBehaviour
        // GenerateGrid();
 
         canvas.SetActive(false);
+        //currentScore = initialScore = scoreSlider.value;
 
 
         Vector2 puzzleDimensions = CheckForDimensions();
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
             Debug.Log(item.gameObject.name);
         }
 
-        Shuffle();
+        //Shuffle();
 
         puzzle.conectionsToWin = GetConectionsToWin();
         print(puzzle.conectionsToWin);
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         puzzle.currentConections = Sweep();
 
     }
-
+    //Shuffle the nodes with a random rotation
     private void Shuffle()
     {
         foreach (Node node in puzzle.nodes) 
@@ -76,16 +76,17 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < randomRotation; i++)
             {
-                node.RotateNodes();
+                node.RotateNode();
             }
         }
     }
 
+    //Sweep all grid
     public int Sweep()
     {
         int value = 0;
 
-        //for each collumn check its line 
+        //for each collumn check its row 
         for (int h = 0; h < puzzle.height;h++)
             for (int w = 0; w < puzzle.width; w++)
             {
@@ -99,6 +100,34 @@ public class GameManager : MonoBehaviour
                     if (puzzle.nodes[w, h].values[1] == 1 && puzzle.nodes[w +1, h].values[3] == 1)
                         value++;
             }
+
+        return value;
+    }
+
+    //sweep per node
+    public int QuickSweep(int w, int h)
+    {
+        int value = 0;
+
+        //Compare conection on Top
+        if (h != puzzle.height - 1)
+            if (puzzle.nodes[w, h].values[0] == 1 && puzzle.nodes[w, h + 1].values[2] == 1)
+                value++;
+
+        //Compare conection on Right 
+        if (w != puzzle.width - 1)
+            if (puzzle.nodes[w, h].values[1] == 1 && puzzle.nodes[w + 1, h].values[3] == 1)
+                value++;
+
+        //Compare conection on Bottom
+        if (h != 0) // if not in row 0
+            if (puzzle.nodes[w, h].values[2] == 1 && puzzle.nodes[w, h - 1].values[0] == 1)
+                value++;
+
+        //Compare conection on Left
+        if (w != 0) // if nnot in collumn 0
+            if (puzzle.nodes[w, h].values[3] == 1 && puzzle.nodes[w - 1, h].values[1] == 1)
+                value++;
 
         return value;
     }
@@ -121,6 +150,8 @@ public class GameManager : MonoBehaviour
         return winValue;
     }
 
+    //Another way of doing a grid
+    /* 
     private void GenerateGrid()
     {
         for (int x = 0; x < puzzle.width; x++)
@@ -130,7 +161,7 @@ public class GameManager : MonoBehaviour
                 var node = Instantiate(puzzle.prefab, new Vector2(x, y), Quaternion.identity);
             }
         }
-    }
+    }*/
     private Vector2 CheckForDimensions()
     {
         Vector2 dimension = Vector2.zero;
@@ -156,15 +187,19 @@ public class GameManager : MonoBehaviour
         return dimension;
     }
 
-    public void CheckPuzzleCompletion()
+    public void PuzzleCompletion()
     {
         canvas.SetActive(true);
         foreach (Node node in puzzle.nodes)
-            node.GetComponent<SpriteRenderer>().color = Color.yellow;
+            node.GetComponent<SpriteRenderer>().color = Color.green;
 
-        //TODO: Level progress and score saving
-        //      Particle effects, camera shake,
-        //      On level completion, lines should illuminate or provide a visual feedback.
+        ScoreManager.instance.UpdateScore();
+
+    }
+
+    public void BackToLevelSelection()
+    {
+        SceneManager.LoadScene("LevelSelection");
     }
 
 }

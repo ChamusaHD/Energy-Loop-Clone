@@ -18,6 +18,9 @@ public class Node : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip clip;
+
     void Start()
     {
         //realRotation = transform.rotation.eulerAngles.z;
@@ -26,7 +29,6 @@ public class Node : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(transform.rotation.eulerAngles.z!= realRotation)
@@ -38,28 +40,33 @@ public class Node : MonoBehaviour
     private void OnMouseDown()
     {
 
-        //Play.SFX
         Handheld.Vibrate();
+        source.PlayOneShot(clip);
 
-        RotateNodes();
+        int diference = -gameManager.QuickSweep((int)transform.position.x,(int)transform.position.y); //QuickSweep before rotating
 
-        gameManager.puzzle.currentConections = gameManager.Sweep();
+        RotateNode();
+
+        diference += gameManager.QuickSweep((int)transform.position.x, (int)transform.position.y); //QuickSweep after rotating
+
+       // gameManager.puzzle.currentConections = gameManager.Sweep();
+        gameManager.puzzle.currentConections += diference;
 
         if (gameManager.puzzle.currentConections == gameManager.puzzle.conectionsToWin )
         {
-            gameManager.CheckPuzzleCompletion();
-            //spriteRenderer.color= Color.white;
-            //SceneManager.LoadScene("LevelSelection");
+            gameManager.PuzzleCompletion();
+
             LevelManager.Instance.UnlockNewLevel();
             //Invoke();
 
         } 
     }
 
-    public void RotateNodes()
+    public void RotateNode()
     {
         realRotation += 90;
         //transform.rotation = Quaternion.Euler(0, 0, realRotation);
+
 
         if (realRotation == 360)
             realRotation = 0;
@@ -78,9 +85,4 @@ public class Node : MonoBehaviour
 
         values[3] = aux;
     }
-
-    /*public int GetValues()
-    {
-        return values[1];
-    }*/
 }
