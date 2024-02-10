@@ -1,7 +1,7 @@
 Project Overview
 
 The project works based on a grid where each tile equals to a 1 by 1 square. The grid detects how many node prefabs are in each rows and collums divided by the 1 by 1 square scale and takes that shape, keeping in mind that if there are blank spaces between prefabs the grid will not know how to act and give an error so we must add the null node prefab. 
-  A node can have at a maximum four exits so each node has an array of values atributed for each of this four exits (Top, Right, Bottom, Left). This values can be 1 or 0 depending on if the sprite actually has an exit to connect with others or not. When we click the nodes to rotate, this values also get updated.
+  A node can have at a maximum four exits so each node has an array of values atributed for each of this four exits (Top, Right, Bottom, Left). This values can be 1 or 0 depending on if the node actually has an exit to connect with others or not. When we click the nodes to rotate, this values also get updated.
   The win condition is based on the comparison between the current conected nodes and the total conections possible, when both of these are equal it means that the player succeeded conecting all the nodes. When all the nodes are conected, the next level is loaded. 
   Unlocked levels and Score are saved with PlayerPrefs.
 
